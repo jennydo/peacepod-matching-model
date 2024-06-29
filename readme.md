@@ -24,3 +24,9 @@ Start to run repo
 ```
 python3 main.py
 ```
+
+To stop running python system
+
+```
+deactivate
+```
