@@ -6,7 +6,6 @@ from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from collections import defaultdict
-from bson import ObjectId
 import random
 
 # Connect to MongoDB
@@ -66,7 +65,7 @@ def pair_users_within_clusters(df):
     for cluster, group in cluster_groups:
         users = list(group.to_dict(orient='records')) # converts the group data into a list of dictionaries where each dictionary represents a user within the cluster.
         random.shuffle(users)  # Shuffle to randomize pairings
-        print("NEW CLUSTER")
+        # print("NEW CLUSTER")
 
         while len(users) > 1:
             user = users.pop()
@@ -77,9 +76,9 @@ def pair_users_within_clusters(df):
 
                 # Check if the users have not been previously matched
                 if (str(potential_match_id) not in user['chatMatchedUsers'] and str(user_id) not in potential_match['chatMatchedUsers']):
-                    pairings[user_id].append(potential_match_id)
-                    pairings[potential_match_id].append(user_id)
-                    print("--> matched: " + user['username'] + " x " +  potential_match['username'])
+                    pairings[str(user_id)] = str(potential_match_id)
+                    pairings[str(potential_match_id)] = str(user_id)
+                    # print("--> matched: " + user['username'] + " x " +  potential_match['username'])
 
                     # # Update the "chatMatchedUsers" field for users on MongoDB
                     # users_collection.update_one(
@@ -99,3 +98,7 @@ def pair_users_within_clusters(df):
 
 # Execute pairing function
 pairings = pair_users_within_clusters(match_users_df)
+
+# Function to get pairings
+def get_pairings():
+    return pairings

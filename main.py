@@ -11,19 +11,15 @@ def default():
 
 @app.route('/matchPairs', methods=['GET'])
 def get_match_pairs():
-    pairings = get_pairings()
-    pairing_json = json.dumps(pairings) #returns a string
-    return jsonify(pairing_json)
+    return pair_results
 
 @app.route('/matchPairs', methods=['POST'])
 def add_match_pair():
-    data = request.get_json()
+    global pair_results  # Declare pair_results as global
     pairings = get_pairings()
-    if 'key' in data and 'value' in data:
-        pairings[data['key']] = data['value']
-        return jsonify({"message": "Pair added successfully"}), 201
-    else:
-        return jsonify({"error": "Invalid data"}), 400
+    pairs_jsonify = jsonify(pairings)
+    pair_results = pairs_jsonify
+    return pair_results
 
 if __name__ == '__main__':
     app.run(host='localhost', port = 5002, debug=True)
